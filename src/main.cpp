@@ -8,7 +8,7 @@ int main(void)
     size_t array_size = sizeof(values) / sizeof(int);
 
     for (int i = 0; i < array_size; i++) {
-        std::cout << "value_" << i << "? ";
+        std::cout << "value_" << i << " ? ";
         std::cin >> values[i];
     }
 
@@ -17,6 +17,8 @@ int main(void)
 
     // 結果の表示
     bool start_flag = false;
+    std::cout << "\nanswer : ";
+
     if (answer.size() != 1) {
         for (int index = answer.size() - 1; index >= 0; index--) {
             if (!start_flag && answer[index] != 0) {
