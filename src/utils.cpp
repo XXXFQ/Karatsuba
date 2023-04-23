@@ -4,7 +4,7 @@
 
 namespace karatsuba
 {
-    unsigned Utils::getDigit(unsigned num)
+    unsigned Utils::get_digit(unsigned num)
     {
         return log10(num) + 1;
     }

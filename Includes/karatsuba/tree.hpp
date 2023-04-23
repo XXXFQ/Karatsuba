@@ -12,37 +12,33 @@ namespace karatsuba
         class Node
         {
         private:
-            std::vector<int> values;
-            int digits = 0;
+            std::vector<int> values_;
+            int digits_ = 0;
         
         public:
-            void newNode(int, int);
-            void setValues(std::vector<int>);
-            int getDigits() { return digits; };
-            int getValue(int);
+            void new_node(int, int);
+            void set_values(std::vector<int>);
+            int digits() const { return digits_; };
+            int get_value(int index) const { return values_[index]; };
             int left(int);
             int right(int);
         };
 
-        Node value[2];
-        Node result;
-        int digits = 0;
+        Node value_[2];
+        Node result_;
+        int digits_ = 0;
     
     public:
-        Tree();
+        Tree() = default;
         Tree(int, int, int);
-        void setResult(int, int);
-        void setResult(const std::vector<int>);
-        std::vector<int> getResult();
-        int getValue(int, int);
+        void set_result(int, int);
+        void set_result(const std::vector<int>);
+        std::vector<int> get_result();
+        int get_value(int, int);
         int left(int, int);
         int right(int, int);
         int lradd(int, int);
-        int getDigits() { return digits; };
-        static std::vector<int> add(std::vector<int>, std::vector<int>);
-        static std::vector<int> sub(std::vector<int>, std::vector<int>);
-        static std::vector<int> shift(std::vector<int>, int);
-        static std::vector<int> carry(std::vector<int>);
+        int digits() const { return digits_; };
     };
 }
 

@@ -5,10 +5,9 @@
 int main(void)
 {
     int values[2];
-    size_t arraySize = sizeof(values) / sizeof(int);
-    bool startFlag = false;
+    size_t array_size = sizeof(values) / sizeof(int);
 
-    for (int i = 0; i < arraySize; i++) {
+    for (int i = 0; i < array_size; i++) {
         std::cout << "value_" << i << "? ";
         std::cin >> values[i];
     }
@@ -17,15 +16,15 @@ int main(void)
     std::vector<int> answer = karatsuba::multiplication(values[0], values[1]);
 
     // 結果の表示
+    bool start_flag = false;
     if (answer.size() != 1) {
         for (int index = answer.size() - 1; index >= 0; index--) {
-            if (!startFlag && answer[index] != 0) {
-                startFlag = true;
+            if (!start_flag && answer[index] != 0) {
+                start_flag = true;
             }
-            if (startFlag) {
+            if (start_flag) {
                 std::cout << answer[index];
             }
-
         }
         std::cout << "" << std::endl;
     } else {

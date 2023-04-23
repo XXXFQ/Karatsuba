@@ -6,7 +6,7 @@ namespace karatsuba
     class Utils
     {
     public:
-        static unsigned getDigit(unsigned);
+        static unsigned get_digit(unsigned);
     };
 }
 

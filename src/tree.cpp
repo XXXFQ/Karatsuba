@@ -5,201 +5,125 @@
 namespace karatsuba
 {
     // 受け取った値を元にノードを作成する
-    void Tree::Node::newNode(int value, const int N)
+    void Tree::Node::new_node(int node_data, const int digits)
     {
-        digits = N;
+        this->digits_ = digits;
 
         // 値を直接格納する
-        if (digits == 1) {
-            values.push_back(value);
+        if (this->digits_ == 1) {
+            this->values_.push_back(node_data);
             return;
         }
         
         // 値を繰り下げて格納する
-        if (digits < Utils::getDigit(value)) {
-            for (int i = 0; value > 0; i++) {
-                values.push_back(value % 10);
-                value = value / 10;
+        if (this->digits_ < Utils::get_digit(node_data)) {
+            for (int i = 0; node_data > 0; i++) {
+                this->values_.push_back(node_data % 10);
+                node_data = node_data / 10;
 
                 // 繰り下がり処理
-                if (value != 0) {
-                    values[i] += 10;
-                    value -= 1;
+                if (node_data != 0) {
+                    this->values_[i] += 10;
+                    node_data -= 1;
                 }
 
                 // 配列に格納しきれない桁を、さらに繰り下げて格納する
-                if (digits - 1 <= i && value > 0) {
-                    values[i] += value * 10;
-                    value = 0;
+                if (this->digits_ - 1 <= i && node_data > 0) {
+                    this->values_[i] += node_data * 10;
+                    node_data = 0;
                 }
             }
             return;
         }
 
         // 桁ごとの値を順番に格納する
-        while (value != 0) {
-            values.push_back(value % 10);
-            value /= 10;
+        while (node_data != 0) {
+            this->values_.push_back(node_data % 10);
+            node_data /= 10;
         }
 
         // 上位桁の0埋め処理
-        while (values.size() < digits) {
-            values.push_back(0);
+        while (this->values_.size() < this->digits_) {
+            this->values_.push_back(0);
         }
     }
 
-    void Tree::Node::setValues(const std::vector<int> newValues)
+    void Tree::Node::set_values(const std::vector<int> values)
     {
-        values = newValues;
-        digits = values.size();
+        this->values_ = values;
+        this->digits_ = values_.size();
     }
 
-    int Tree::Node::getValue(const int index)
-    {
-        return values[index];
-    }
-
-    int Tree::Node::left(const int N)
+    int Tree::Node::left(const int count)
     {
         int data = 0;
-        for (int i = 0; i < N; i++) {
-            data += values[values.size() - 1 - i] * pow(10, N - 1 - i);
+        for (int i = 0; i < count; i++) {
+            data += this->values_[this->values_.size() - 1 - i] * pow(10, count - 1 - i);
         }
         return data;
     }
 
-    int Tree::Node::right(const int N)
+    int Tree::Node::right(const int count)
     {
         int data = 0;
-        for (int i = 0; i < N; i++) {
-            data += values[i] * pow(10, i);
+        for (int i = 0; i < count; i++) {
+            data += this->values_[i] * pow(10, i);
         }
         return data;
     }
 
-    Tree::Tree()
+    Tree::Tree(const int data1, const int data2, const int digits)
     {
+        this->digits_ = digits;
+        this->value_[0].new_node(data1, digits_);
+        this->value_[1].new_node(data2, digits_);
     }
 
-    Tree::Tree(const int data1, const int data2, const int N)
+    std::vector<int> Tree::get_result()
     {
-        digits = N;
-        value[0].newNode(data1, digits);
-        value[1].newNode(data2, digits);
-    }
+        std::vector<int> result_values;
 
-    std::vector<int> Tree::getResult()
-    {
-        std::vector<int> resultValues;
-
-        for (int i = 0; i < result.getDigits(); i++) {
-            resultValues.push_back(result.getValue(i));
+        for (int i = 0; i < this->result_.digits(); i++) {
+            result_values.push_back(this->result_.get_value(i));
         }
-        return resultValues;
+        return result_values;
     }
 
     // 演算結果を格納する処理
-    void Tree::setResult(const int data, const int N)
+    void Tree::set_result(const int data, const int count)
     {
-        result.newNode(data, N);
+        this->result_.new_node(data, count);
     }
 
     // 演算結果を配列ごと格納する処理
-    void Tree::setResult(const std::vector<int> values)
+    void Tree::set_result(const std::vector<int> values)
     {
-        result.setValues(values);
+        this->result_.set_values(values);
     }
 
-    int Tree::getValue(int indexValue, int index)
+    int Tree::get_value(int index_value, int index)
     {
-        if (index < 0 || index >= digits) {
+        if (index < 0 || index >= this->digits_) {
             return 0;
         }
-        return value[indexValue].getValue(index);
+        return this->value_[index_value].get_value(index);
     }
 
     // nodeのvaluesのインデックスが大きい方のN個の要素を返す
-    int Tree::left(const int index, const int N)
+    int Tree::left(const int index, const int count)
     {
-        return value[index].left(N);
+        return this->value_[index].left(count);
     }
 
     // nodeのvaluesのインデックスが小さい方のN個の要素を返す
-    int Tree::right(const int index, const int N)
+    int Tree::right(const int index, const int count)
     {
-        return value[index].right(N);
+        return this->value_[index].right(count);
     }
 
     // left() + right()の結果を返す
-    int Tree::lradd(const int index, const int N)
+    int Tree::lradd(const int index, const int count)
     {
-        return left(index, N) + right(index, N);
-    }
-
-    // 桁ごとの加算を行う
-    std::vector<int> Tree::add(std::vector<int> values1, std::vector<int> values2)
-    {
-        std::vector<int> resultValues;
-        for (int i = 0; i < std::max(values1.size(), values2.size()); i++) {
-            resultValues.push_back(0);
-            if (i < values1.size()) {
-                resultValues[i] += values1[i];
-            }
-            if (i < values2.size()) {
-                resultValues[i] += values2[i];
-            }
-        }
-        return resultValues;
-    }
-
-    // 桁ごとの減算を行う
-    std::vector<int> Tree::sub(std::vector<int> values1, std::vector<int> values2)
-    {
-        std::vector<int> resultValues;
-        for (int i = 0; i < std::min(values1.size(), values2.size()); i++) {
-            int subData = values1[i] - values2[i];
-
-            if (subData >= 0) {
-                resultValues.push_back(subData);
-            } else {
-                // 減算結果が負の値の場合、繰り下げを行って正の値に調整する。
-                int carryCount = subData / -10 + 1;
-                resultValues.push_back(carryCount * 10 + subData);
-                values1[i + 1] -= carryCount;
-            }
-        }
-        return resultValues;
-    }
-
-    // valuesを10^k倍する。
-    std::vector<int> Tree::shift(std::vector<int> values, int multiplier)
-    {
-        std::vector<int> resultValues;
-
-        // 0埋め処理
-        for (int k = 0; k < multiplier; k++) {
-            resultValues.push_back(0);
-        }
-
-        // 値のシフト処理
-        for (int i = 0; i < values.size(); i++) {
-            resultValues.push_back(values[i]);
-        }
-        return resultValues;
-    }
-
-    // 繰り上がり・繰り下がり処理を行う
-    std::vector<int> Tree::carry(std::vector<int> values)
-    {
-        int length = values.size();
-        
-        for (int i = 0; i < length; i++) {
-            if (Utils::getDigit(values[i]) > 1) {
-                int carry_count = values[i] / 10;
-                values[i] %= 10;
-                values[i + 1] += carry_count;
-            }
-        }
-        return values;
+        return left(index, count) + right(index, count);
     }
 }
