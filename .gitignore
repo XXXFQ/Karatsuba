@@ -1,2 +1,6 @@
 /.vscode
+/Build
 /Karatsuba.exe
+
+# workspace
+*.code-workspace
