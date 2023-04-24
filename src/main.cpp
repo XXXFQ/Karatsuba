@@ -1,38 +1,30 @@
-#include "karatsuba.hpp"
-
 #include <iostream>
+
+#include "karatsuba.hpp"
 
 int main(void)
 {
-    int values[2];
-    size_t array_size = sizeof(values) / sizeof(int);
+    std::string string_data[2];
+    std::vector<std::vector<int>> values(2);
 
-    for (int i = 0; i < array_size; i++) {
-        std::cout << "value_" << i << " ? ";
-        std::cin >> values[i];
+    for (int i = 0; i < values.size(); i++) {
+        std::cout << "values " << i + 1 << " ? ";
+        std::cin >> string_data[i];
+        values[i] = karatsuba::convert_to_vector(string_data[i]);
     }
+
+    // 配列が空の場合、関数を抜ける
+    if (!values[0].size() || !values[1].size()) return 0;
 
     // 計算結果を格納
-    std::vector<int> answer = karatsuba::multiplication(values[0], values[1]);
+    std::vector<int> answer = karatsuba::mul(values[0], values[1]);
+    values[0] = karatsuba::carry(values[0]);
+    values[1] = karatsuba::carry(values[1]);
 
     // 結果の表示
-    bool start_flag = false;
-    std::cout << "\nanswer : ";
+    std::cout << "answer = ";
+    karatsuba::show_vector(answer);
 
-    if (answer.size() != 1) {
-        for (int index = answer.size() - 1; index >= 0; index--) {
-            if (!start_flag && answer[index] != 0) {
-                start_flag = true;
-            }
-            if (start_flag) {
-                std::cout << answer[index];
-            }
-        }
-        std::cout << "" << std::endl;
-    } else {
-        std::cout << answer[0] << std::endl;
-    }
-    
     system("PAUSE");
     return 0;
 }

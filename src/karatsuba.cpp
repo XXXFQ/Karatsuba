@@ -1,15 +1,41 @@
-#include <math.h>
-#include <vector>
-
 #include "karatsuba/karatsuba.hpp"
 #include "karatsuba/tree.hpp"
 
 namespace karatsuba
 {
-    // 桁ごとの加算を行う
-    std::vector<int> add(std::vector<int> values1, std::vector<int> values2)
+    // valuesのインデックスが大きい方のN個の要素を返す
+    std::vector<int> left(const std::vector<int> values, const int count)
     {
         std::vector<int> result_values;
+
+        for (int i = count - 1; i >= 0; i--) {
+            result_values.push_back(values[values.size() - 1 - i]);
+        }
+        return result_values;
+    }
+
+    // valuesのインデックスが小さい方のN個の要素を返す
+    std::vector<int> right(const std::vector<int> values, const int count)
+    {
+        std::vector<int> result_values;
+
+        for (int i = 0; i < count; i++) {
+            result_values.push_back(values[i]);
+        }
+        return result_values;
+    }
+
+    // left() + right()の結果を返す
+    std::vector<int> lradd(const std::vector<int> values, const int count)
+    {
+        return add(left(values, count), right(values, count));
+    }
+
+    // 桁ごとの加算を行う
+    std::vector<int> add(const std::vector<int> values1, const std::vector<int> values2)
+    {
+        std::vector<int> result_values;
+
         for (int i = 0; i < std::max(values1.size(), values2.size()); i++) {
             result_values.push_back(0);
             if (i < values1.size()) {
@@ -26,6 +52,7 @@ namespace karatsuba
     std::vector<int> sub(std::vector<int> values1, std::vector<int> values2)
     {
         std::vector<int> result_values;
+
         for (int i = 0; i < std::min(values1.size(), values2.size()); i++) {
             int sub_data = values1[i] - values2[i];
 
@@ -42,7 +69,7 @@ namespace karatsuba
     }
 
     // valuesを10^k倍する。
-    std::vector<int> shift(std::vector<int> values, int multiplier)
+    std::vector<int> shift(const std::vector<int> values, const int multiplier)
     {
         std::vector<int> result_values;
 
@@ -61,10 +88,19 @@ namespace karatsuba
     // 繰り上がり・繰り下がり処理を行う
     std::vector<int> carry(std::vector<int> values)
     {
-        int length = values.size();
-        
-        for (int i = 0; i < length; i++) {
-            if (Utils::get_digit(values[i]) > 1) {
+        for (int i = 0; i < values.size(); i++) {
+            // 繰り下がり処理
+            if (values[i] < 0 && i + 1 < values.size()) {
+                int carry_count = values[i] / -10 + 1;
+                values[i] += carry_count * 10;
+                values[i + 1] -= carry_count;
+            }
+
+            // 繰り上がり処理
+            if (Utils::get_digits(values[i]) > 1) {
+                if (i + 1 >= values.size()) {
+                    values.push_back(0);
+                }
                 int carry_count = values[i] / 10;
                 values[i] %= 10;
                 values[i + 1] += carry_count;
@@ -73,15 +109,23 @@ namespace karatsuba
         return values;
     }
 
-    std::vector<int> multiplication(const int value1, const int value2)
+    // 2つの配列value1とvalue2の乗算を行う
+    std::vector<int> mul(std::vector<int> value1, std::vector<int> value2)
     {
-        if (!value1 || !value2) return std::vector<int>(1, 0);
+        value1 = carry(value1);
+        value2 = carry(value2);
 
-        std::vector<Tree> elements(1);
-        std::vector<int> layer_top(2);
+        // 配列に0のみ格納されていたら、演算結果の0を返す
+        if ((!value1[0] && value1.size() == 1) || (!value2[0] && value2.size() == 1)) {
+            return std::vector<int>(1, 0);
+        }
+
+        // elements配列の初期化
+        std::vector<Tree> elements(1); // 0番目の要素はダミーで使わない
+        std::vector<int> layer_top(2); // 各層の先頭要素のインデックスを保持
         const int value1_index = 0, value2_index = 1;
-        const int digits = pow(2, ceil(log2(std::max(Utils::get_digit(value1), Utils::get_digit(value2)))));
-        const int t_depth = log2(digits) + 1;
+        const int digits = pow(2, ceil(log2(std::max(value1.size(), value2.size())))); // 2の冪乗になるように桁数を決定
+        const int t_depth = log2(digits) + 1; // treeの深さを決定
         
         // treeの各層の、elements配列上でのインデックスを算出。
         layer_top[value1_index] = 0;
@@ -101,9 +145,9 @@ namespace karatsuba
                 int cn = parent.digits() / 2;
 
                 // 子ノードの追加
-                elements.push_back(Tree(parent.left(value1_index, cn), parent.left(value2_index, cn), cn));
-                elements.push_back(Tree(parent.right(value1_index, cn), parent.right(value2_index, cn), cn));
-                elements.push_back(Tree(parent.lradd(value1_index, cn), parent.lradd(value2_index, cn), cn));
+                elements.push_back(Tree(left(parent.get_values(value1_index), cn), left(parent.get_values(value2_index), cn), cn));
+                elements.push_back(Tree(right(parent.get_values(value1_index), cn), right(parent.get_values(value2_index), cn), cn));
+                elements.push_back(Tree(lradd(parent.get_values(value1_index), cn), lradd(parent.get_values(value2_index), cn), cn));
             }
         }
 
@@ -139,5 +183,41 @@ namespace karatsuba
         }
 
         return carry(elements[layer_top[1]].get_result());
+    }
+
+    // 結果の表示
+    void show_vector(std::vector<int> array)
+    {
+        bool start_flag = false;
+
+        array = carry(array);
+        if (array.size() != 1) {
+            for (int index = array.size() - 1; index >= 0; index--) {
+                if (!start_flag && array[index] != 0) {
+                    start_flag = true;
+                }
+                if (start_flag) {
+                    std::cout << array[index];
+                }
+            }
+            std::cout << "" << std::endl;
+        } else {
+            std::cout << array[0] << std::endl;
+        }
+    }
+
+    std::vector<int> convert_to_vector(std::string str)
+    {
+        std::vector<int> result_values;
+
+        for (int i = str.length() - 1; i >= 0; i--) {
+            char c = str[i];
+
+            // 数値以外の文字があった場合、関数を抜ける
+            if (!Utils::is_digit(c)) return std::vector<int>(0);
+
+            result_values.push_back(int(c - '0'));
+        }
+        return result_values;
     }
 }
