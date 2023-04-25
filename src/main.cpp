@@ -18,11 +18,9 @@ int main(void)
 
     // 計算結果を格納
     std::vector<int> answer = karatsuba::mul(values[0], values[1]);
-    values[0] = karatsuba::carry(values[0]);
-    values[1] = karatsuba::carry(values[1]);
 
     // 結果の表示
-    std::cout << "answer = ";
+    std::cout << "\nanswer = ";
     karatsuba::show_vector(answer);
 
     system("PAUSE");
