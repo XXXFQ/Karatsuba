@@ -1,9 +1,9 @@
-#ifndef   KARATSUBA_UTILS_HPP
-#define   KARATSUBA_UTILS_HPP
+#ifndef   KARATSUBA_NUMBER_HELPER_HPP
+#define   KARATSUBA_NUMBER_HELPER_HPP
 
 namespace karatsuba
 {
-    class Utils
+    class NumberHelper
     {
     public:
         static unsigned get_digits(unsigned);

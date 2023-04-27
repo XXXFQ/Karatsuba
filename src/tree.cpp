@@ -14,7 +14,7 @@ namespace karatsuba
         }
         
         // 値を繰り下げて格納する
-        if (this->digits() < Utils::get_digits(node_data)) {
+        if (this->digits() < NumberHelper::get_digits(node_data)) {
             for (int i = 0; node_data > 0; i++) {
                 this->values_.push_back(node_data % 10);
                 node_data = node_data / 10;

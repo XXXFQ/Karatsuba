@@ -1,15 +1,15 @@
 #include <math.h>
 
-#include "karatsuba/utils.hpp"
+#include "karatsuba/number_helper.hpp"
 
 namespace karatsuba
 {
-    unsigned Utils::get_digits(unsigned num)
+    unsigned NumberHelper::get_digits(unsigned num)
     {
         return log10(num) + 1;
     }
 
-    bool Utils::is_digit(char c)
+    bool NumberHelper::is_digit(char c)
     {
         return c >= '0' && c <= '9';
     }

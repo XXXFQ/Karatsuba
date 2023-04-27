@@ -104,7 +104,7 @@ namespace karatsuba
             }
 
             // 繰り上がり処理
-            if (values[i] >= 0 && Utils::get_digits(values[i]) > 1) {
+            if (values[i] >= 0 && NumberHelper::get_digits(values[i]) > 1) {
                 if (i + 1 >= values.size()) {
                     values.push_back(0);
                 }

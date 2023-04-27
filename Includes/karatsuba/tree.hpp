@@ -4,7 +4,7 @@
 #include <math.h>
 #include <vector>
 
-#include "karatsuba/utils.hpp"
+#include "karatsuba/number_helper.hpp"
 
 namespace karatsuba
 {
