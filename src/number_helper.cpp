@@ -4,12 +4,12 @@
 
 namespace karatsuba
 {
-    unsigned NumberHelper::get_digits(unsigned num)
+    unsigned NumberHelper::countDigits(unsigned num)
     {
         return log10(num) + 1;
     }
 
-    bool NumberHelper::is_digit(char c)
+    bool NumberHelper::isDigit(char c)
     {
         return c >= '0' && c <= '9';
     }

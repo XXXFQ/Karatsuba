@@ -6,8 +6,8 @@ namespace karatsuba
     class NumberHelper
     {
     public:
-        static unsigned get_digits(unsigned);
-        static bool is_digit(char);
+        static unsigned countDigits(unsigned);
+        static bool isDigit(char);
     };
 }
 
