@@ -9,8 +9,12 @@ namespace karatsuba
         return log10(num) + 1;
     }
 
-    bool NumberHelper::isDigit(char c)
+    bool NumberHelper::isNumber(const std::string& str)
     {
-        return c >= '0' && c <= '9';
+        // 先頭が負の数の場合、マイナス記号を除去
+        if (str[0] == '-') {
+            return std::all_of(str.begin() + 1, str.end(), [](char c) { return isdigit(c) != 0; });
+        }
+        return std::all_of(str.begin(), str.end(), [](char c) { return isdigit(c) != 0; });
     }
 }
