@@ -14,8 +14,8 @@ namespace karatsuba
     public:
         /**
          * @brief Multiplies two vectors using Karatsuba algorithm.
-         * @param vec1 The first vector to multiply.
-         * @param vec2 The second vector to multiply.
+         * @param first_vector The first vector to multiply.
+         * @param second_vector The second vector to multiply.
          * @return A vector containing the result of the multiplication.
          */
         static std::vector<int> multiplyVectors(const std::vector<int>&, const std::vector<int>&);

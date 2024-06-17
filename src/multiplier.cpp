@@ -2,13 +2,13 @@
 
 namespace karatsuba
 {
-    std::vector<int> Multiplier::multiplyVectors(const std::vector<int>& vec1, const std::vector<int>& vec2)
+    std::vector<int> Multiplier::multiplyVectors(const std::vector<int>& first_vector, const std::vector<int>& second_vector)
     {
         const int left_hand_side_index = 0, right_hand_side_index = 1;
-
+        
         // 1. キャリー処理を行う
-        std::vector<int> left_hand_side = VectorOperations::handleCarry(vec1);
-        std::vector<int> right_hand_side = VectorOperations::handleCarry(vec2);
+        std::vector<int> left_hand_side = VectorOperations::handleCarry(first_vector);
+        std::vector<int> right_hand_side = VectorOperations::handleCarry(second_vector);
 
         // 2. どちらかのベクトルが0の場合、結果は0となる
         if (VectorOperations::isZero(left_hand_side) || VectorOperations::isZero(right_hand_side)) {
