@@ -4,20 +4,12 @@ namespace karatsuba
 {
     std::vector<int> VectorOperations::getLeftPart(const std::vector<int>& values, int count)
     {
-        std::vector<int> result;
-        for (int i = count - 1; i >= 0; --i) {
-            result.push_back(values[values.size() - 1 - i]);
-        }
-        return result;
+        return std::vector<int>(values.end() - count, values.end());
     }
 
     std::vector<int> VectorOperations::getRightPart(const std::vector<int>& values, int count)
     {
-        std::vector<int> result;
-        for (int i = 0; i < count; ++i) {
-            result.push_back(values[i]);
-        }
-        return result;
+        return std::vector<int>(values.begin(), values.begin() + count);
     }
 
     std::vector<int> VectorOperations::addLeftAndRightParts(const std::vector<int>& values, int count)
@@ -27,7 +19,7 @@ namespace karatsuba
 
     std::vector<int> VectorOperations::removeLeadingZeros(const std::vector<int>& values)
     {
-        std::vector<int> result = values;
+        auto result = values;
         while (result.size() > 1 && result.back() == 0) {
             result.pop_back();
         }
@@ -38,12 +30,8 @@ namespace karatsuba
     {
         std::vector<int> result(std::max(values1.size(), values2.size()), 0);
         for (size_t i = 0; i < result.size(); ++i) {
-            if (i < values1.size()) {
-                result[i] += values1[i];
-            }
-            if (i < values2.size()) {
-                result[i] += values2[i];
-            }
+            if (i < values1.size()) result[i] += values1[i];
+            if (i < values2.size()) result[i] += values2[i];
         }
         return result;
     }
@@ -52,12 +40,8 @@ namespace karatsuba
     {
         std::vector<int> result(std::max(values1.size(), values2.size()), 0);
         for (size_t i = 0; i < result.size(); ++i) {
-            if (i < values1.size()) {
-                result[i] += values1[i];
-            }
-            if (i < values2.size()) {
-                result[i] -= values2[i];
-            }
+            if (i < values1.size()) result[i] += values1[i];
+            if (i < values2.size()) result[i] -= values2[i];
         }
         return result;
     }
@@ -65,9 +49,7 @@ namespace karatsuba
     std::vector<int> VectorOperations::shiftVector(const std::vector<int>& values, int multiplier)
     {
         std::vector<int> result(values.size() + multiplier, 0);
-        for (size_t i = 0; i < values.size(); ++i) {
-            result[i + multiplier] = values[i];
-        }
+        std::copy(values.begin(), values.end(), result.begin() + multiplier);
         return result;
     }
 

@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "karatsuba.hpp"
 
 int main(void)
@@ -7,31 +6,33 @@ int main(void)
     std::string string_data[2];
     std::vector<std::vector<int>> values(2);
 
-    // 値の入力
+    // Value input with validation
     for (int i = 0; i < values.size(); i++) {
-        std::cout << "values " << i + 1 << " ? ";
+        std::cout << "Enter value " << i + 1 << " ? ";
         std::cin >> string_data[i];
 
-        // 数値かどうかのチェック
+        // Check if input is a number and within acceptable range
         if (!karatsuba::NumberHelper::isNumber(string_data[i])) {
-            std::cout << "Invalid input. Please enter a number.\n";
-            return 0;
+            std::cout << "Invalid input. Please enter a valid number.\n";
+            return 1;
         }
 
-        // 文字列をベクトルに変換
+        // Convert string to vector
         values[i] = karatsuba::VectorUtils::stringToVector(string_data[i]);
     }
 
-    // 配列が空の場合、関数を抜ける
-    if (!values[0].size() || !values[1].size()) return 0;
+    // If either array is empty, exit
+    if (values[0].empty() || values[1].empty()) {
+        std::cout << "One of the inputs is empty, exiting program.\n";
+        return 1;
+    }
 
-    // 計算結果を格納
+    // Perform multiplication
     const std::vector<int> answer = karatsuba::Multiplier::multiplyVectors(values[0], values[1]);
 
-    // 結果の表示
-    std::cout << "\nanswer = ";
+    // Display result
+    std::cout << "\nResult = ";
     karatsuba::VectorUtils::displayVector(answer);
 
-    system("PAUSE");
     return 0;
 }
