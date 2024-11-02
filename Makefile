@@ -1,7 +1,16 @@
 BUILDDIR	:=	Build
 INCLUDEDIR	:=	Includes
 SOURCES		:=	src
-TARGET		:=	Karatsuba.exe
+
+# Detect OS type
+UNAME := $(shell uname)
+ifeq ($(UNAME), Linux)
+    TARGET := Karatsuba.elf
+else ifeq ($(UNAME), Darwin)
+    TARGET := Karatsuba  # No extension for macOS
+else
+    TARGET := Karatsuba.exe
+endif
 
 #---------------------------------------------------------------------------------
 # options for code generation

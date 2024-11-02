@@ -1,38 +1,40 @@
 #include <iostream>
 #include "karatsuba.hpp"
 
+using namespace karatsuba;
+
 int main(void)
 {
-    std::string string_data[2];
-    std::vector<std::vector<int>> values(2);
+    std::string input_strings[2];
+    SignedVector input_vectors[2];
 
     // Value input with validation
-    for (int i = 0; i < values.size(); i++) {
+    for (int i = 0; i < 2; i++) {
         std::cout << "Enter value " << i + 1 << " ? ";
-        std::cin >> string_data[i];
+        std::cin >> input_strings[i];
 
         // Check if input is a number and within acceptable range
-        if (!karatsuba::NumberHelper::isNumber(string_data[i])) {
+        if (!NumberHelper::isNumber(input_strings[i])) {
             std::cout << "Invalid input. Please enter a valid number.\n";
             return 1;
         }
 
         // Convert string to vector
-        values[i] = karatsuba::VectorUtils::stringToVector(string_data[i]);
+        input_vectors[i] = VectorUtils::stringToVector(input_strings[i]);
     }
 
-    // If either array is empty, exit
-    if (values[0].empty() || values[1].empty()) {
-        std::cout << "One of the inputs is empty, exiting program.\n";
+    // Check if either input is zero
+    if (input_vectors[0].isZero() || input_vectors[1].isZero()) {
+        std::cout << "One of the inputs is empty, exiting program.\\n";
         return 1;
     }
 
     // Perform multiplication
-    const std::vector<int> answer = karatsuba::Multiplier::multiplyVectors(values[0], values[1]);
+    SignedVector karatsuba_output = VectorOperations::multiplyVectors(input_vectors[0], input_vectors[1]);
 
     // Display result
     std::cout << "\nResult = ";
-    karatsuba::VectorUtils::displayVector(answer);
+    VectorUtils::displayVector(karatsuba_output);
 
     return 0;
 }

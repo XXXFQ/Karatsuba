@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include "karatsuba/signed_vector.hpp"
 #include "karatsuba/vector_operations.hpp"
 
 namespace karatsuba
@@ -15,13 +16,20 @@ namespace karatsuba
          * @param str The string to convert.
          * @return A vector of integers representing the string.
          */
-        static std::vector<int> stringToVector(const std::string&);
+        static SignedVector stringToVector(const std::string&);
 
         /**
-         * @brief Displays a vector of integers.
-         * @param array The vector to display.
+         * @brief Checks if a string has a negative sign.
+         * @param str The string to check.
+         * @return True if the string has a negative sign, false otherwise.
          */
-        static void displayVector(const std::vector<int>&);
+        static bool hasNegativeSign(const std::string&);
+        
+        /**
+         * @brief Displays a vector of integers.
+         * @param vector_values The vector to display.
+         */
+        static void displayVector(const SignedVector&);
     };
 }
 

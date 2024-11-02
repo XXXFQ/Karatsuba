@@ -1,8 +1,10 @@
 #ifndef   KARATSUBA_VECTOR_OPERATIONS_HPP
 #define   KARATSUBA_VECTOR_OPERATIONS_HPP
 
-#include <math.h>
 #include <vector>
+#include <cmath>
+#include "karatsuba/signed_vector.hpp"
+#include "karatsuba/tree.hpp"
 
 namespace karatsuba
 {
@@ -42,19 +44,27 @@ namespace karatsuba
 
         /**
          * @brief Adds two vectors element-wise.
-         * @param values1 The first vector to add.
-         * @param values2 The second vector to add.
+         * @param left_vector The first vector to add.
+         * @param right_vector The second vector to add.
          * @return A vector containing the element-wise sum.
          */
         static std::vector<int> addVectors(const std::vector<int>&, const std::vector<int>&);
 
         /**
          * @brief Subtracts two vectors element-wise.
-         * @param values1 The vector from which to subtract.
-         * @param values2 The vector to subtract.
+         * @param left_vector The vector from which to subtract.
+         * @param right_vector The vector to subtract.
          * @return A vector containing the element-wise difference.
          */
         static std::vector<int> subtractVectors(const std::vector<int>&, const std::vector<int>&);
+
+        /**
+         * @brief Multiplies two vectors using Karatsuba algorithm.
+         * @param left_vector The first vector to multiply.
+         * @param right_vector The second vector to multiply.
+         * @return A vector containing the result of the multiplication.
+         */
+        static SignedVector multiplyVectors(const SignedVector&, const SignedVector&);
 
         /**
          * @brief Multiplies a vector by 10^k (shifts the vector).
