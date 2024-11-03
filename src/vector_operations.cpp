@@ -51,7 +51,6 @@ namespace karatsuba
     SignedVector VectorOperations::multiplyVectors(const SignedVector& left_vector, const SignedVector& right_vector)
     {
         const int left_hand_side_index = 0, right_hand_side_index = 1;
-        bool result_is_negative = left_vector.isNegative() ^ right_vector.isNegative();
 
         // Perform carry handling
         auto left_hand_side = VectorOperations::handleCarry(left_vector.getValues());
@@ -135,6 +134,7 @@ namespace karatsuba
         }
 
         // Retrieve the result
+        bool result_is_negative = left_vector.isNegative() ^ right_vector.isNegative();
         return SignedVector(tree_elements[layer_start_index[1]].getResult(), result_is_negative);
     }
 

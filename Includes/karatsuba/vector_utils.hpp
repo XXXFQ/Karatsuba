@@ -16,7 +16,7 @@ namespace karatsuba
          * @param str The string to convert.
          * @return A vector of integers representing the string.
          */
-        static SignedVector stringToVector(const std::string&);
+        static SignedVector stringToSignedVector(const std::string&);
 
         /**
          * @brief Checks if a string has a negative sign.

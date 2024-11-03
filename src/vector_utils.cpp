@@ -2,7 +2,7 @@
 
 namespace karatsuba
 {
-    SignedVector VectorUtils::stringToVector(const std::string& str)
+    SignedVector VectorUtils::stringToSignedVector(const std::string& str)
     {
         std::vector<int> result_values;
         bool has_negative_sign = VectorUtils::hasNegativeSign(str); // Check if the string has a negative sign
