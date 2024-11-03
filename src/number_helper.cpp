@@ -11,6 +11,13 @@ namespace karatsuba
 
     bool NumberHelper::isNumber(const std::string& str)
     {
-        return std::all_of(str.begin(), str.end(), [](char c) { return isdigit(c) != 0; });
+        // 空文字列を除外
+        if (str.empty()) return false;
+
+        // 先頭が '-' であればそれ以降を数字としてチェック
+        size_t start = (str[0] == '-') ? 1 : 0;
+
+        // 残りの部分がすべて数字であるかを確認
+        return start < str.size() && std::all_of(str.begin() + start, str.end(), [](char c) { return isdigit(c) != 0; });
     }
 }

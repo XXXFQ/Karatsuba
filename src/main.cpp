@@ -1,37 +1,56 @@
 #include <iostream>
-
 #include "karatsuba.hpp"
 
-int main(void)
+using namespace karatsuba;
+
+int main(int argc, char* argv[])
 {
-    std::string string_data[2];
-    std::vector<std::vector<int>> values(2);
+    std::string input_strings[2];
+    SignedVector input_vectors[2];
 
-    // 値の入力
-    for (int i = 0; i < values.size(); i++) {
-        std::cout << "values " << i + 1 << " ? ";
-        std::cin >> string_data[i];
+    if (argc == 1) {
+        for (int i = 0; i < 2; i++) {
+            std::cout << "Enter value " << i + 1 << ": ";
+            std::cin >> input_strings[i];
 
-        // 数値かどうかのチェック
-        if (!karatsuba::NumberHelper::isNumber(string_data[i])) {
-            std::cout << "Invalid input. Please enter a number.\n";
-            return 0;
+            // 入力が数値かどうかのチェック
+            if (!NumberHelper::isNumber(input_strings[i])) {
+                std::cerr << "Error: Invalid input. Please enter a valid number.\n";
+                return 1;
+            }
         }
+    } else if (argc == 3) {
+        input_strings[0] = argv[1];
+        input_strings[1] = argv[2];
 
-        // 文字列をベクトルに変換
-        values[i] = karatsuba::VectorUtils::stringToVector(string_data[i]);
+        for (int i = 0; i < 2; i++) {
+            // 入力が数値かどうかのチェック
+            if (!NumberHelper::isNumber(input_strings[i])) {
+                std::cerr << "Error: Invalid input: " << input_strings[i] << ".\n";
+                return 1;
+            }
+        }
+    } else {
+        std::cerr << "Usage: " << argv[0] << " <value1> <value2> (or run without arguments for interactive mode)\n";
+        return 1;
     }
 
-    // 配列が空の場合、関数を抜ける
-    if (!values[0].size() || !values[1].size()) return 0;
+    // 文字列を SignedVector に変換
+    for (int i = 0; i < 2; i++) {
+        input_vectors[i] = VectorUtils::stringToSignedVector(input_strings[i]);
+    }
 
-    // 計算結果を格納
-    const std::vector<int> answer = karatsuba::Multiplier::multiplyVectors(values[0], values[1]);
+    // どちらかの入力がゼロの場合はゼロを出力して終了
+    if (input_vectors[0].isZero() || input_vectors[1].isZero()) {
+        std::cout << "0\n";
+        return 0;
+    }
 
-    // 結果の表示
-    std::cout << "\nanswer = ";
-    karatsuba::VectorUtils::displayVector(answer);
+    // 乗算を実行
+    SignedVector karatsuba_output = VectorOperations::multiplyVectors(input_vectors[0], input_vectors[1]);
 
-    system("PAUSE");
+    // 結果を出力
+    VectorUtils::displayVector(karatsuba_output);
+
     return 0;
 }

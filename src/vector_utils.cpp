@@ -2,39 +2,45 @@
 
 namespace karatsuba
 {
-    std::vector<int> VectorUtils::stringToVector(const std::string& str)
+    SignedVector VectorUtils::stringToSignedVector(const std::string& str)
     {
         std::vector<int> result_values;
-        bool is_negative = str[0] == '-';
-        int start = is_negative ? 1 : 0;
+        bool has_negative_sign = VectorUtils::hasNegativeSign(str); // Check if the string has a negative sign
+        int start = has_negative_sign ? 1 : 0; // Start index for the loop
 
+        // Convert string to vector
         for (int i = str.length() - 1; i >= start; i--) {
-            if (!std::isdigit(str[i])) return {0};
+            if (!std::isdigit(str[i])) return SignedVector({}, false);
             result_values.push_back(str[i] - '0');
         }
 
-        if (is_negative) {
-            result_values.back() *= -1;
-        }
-
-        return result_values;
+        return SignedVector(result_values, has_negative_sign);
     }
 
-    void VectorUtils::displayVector(const std::vector<int>& array)
+    bool VectorUtils::hasNegativeSign(const std::string& str)
     {
-        std::vector<int> clean_array = VectorOperations::removeLeadingZeros(VectorOperations::handleCarry(array));
-        if (clean_array.size() == 1) {
-            std::cout << clean_array[0] << std::endl;
+        return str[0] == '-';
+    }
+
+    void VectorUtils::displayVector(const SignedVector& vector_values)
+    {
+        // Get the vector values
+        std::vector<int> values = VectorOperations::removeLeadingZeros(VectorOperations::handleCarry(vector_values.getValues()));
+
+        // Check if the vector is empty or contains only zeros
+        if (values.empty() || (values.size() == 1 && values[0] == 0)) {
+            std::cout << "0" << std::endl;
             return;
         }
 
-        if (clean_array.back() < 0) {
+        // Display the negative sign if the vector is negative
+        if (vector_values.isNegative()) {
             std::cout << '-';
-            clean_array.back() *= -1;
         }
 
-        for (int i = clean_array.size() - 1; i >= 0; i--) {
-            std::cout << clean_array[i];
+        // Display the vector values
+        for (auto it = values.rbegin(); it != values.rend(); ++it) {
+            std::cout << *it;
         }
         std::cout << std::endl;
     }

@@ -45,6 +45,13 @@ namespace karatsuba
         }
     }
 
+    Tree::Tree(const std::vector<int>& data1, const std::vector<int>& data2, const int digits)
+    {
+        this->digits_ = digits;
+        this->value_[0].setValues(data1, this->getDigitCount());
+        this->value_[1].setValues(data2, this->getDigitCount());
+    }
+
     void Tree::Node::setValues(const std::vector<int>& values)
     {
         this->values_ = values;
@@ -69,13 +76,6 @@ namespace karatsuba
         while (this->getValues().size() < this->getDigitCount()) {
             this->values_.push_back(0);
         }
-    }
-
-    Tree::Tree(const std::vector<int>& data1, const std::vector<int>& data2, const int digits)
-    {
-        this->digits_ = digits;
-        this->value_[0].setValues(data1, this->getDigitCount());
-        this->value_[1].setValues(data2, this->getDigitCount());
     }
 
     void Tree::setResult(int data, int digits)
